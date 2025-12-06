@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posting Page - Crie seu Post</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+</head>
+<body>
+    <!-- Cabeçalho/Navegação -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-feather-alt"></i>
+                <h1>Posting<span>Page</span></h1>
+            </div>
+            <p class="tagline">Crie e compartilhe seus pensamentos</p>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main>
+        <div class="container">
+            <!-- Seção de Criação do Post -->
+            <section class="post-creator">
+                <h2><i class="fas fa-edit"></i> Criar Novo Post</h2>
+                <p class="section-description">Preencha os campos abaixo para criar seu post. Ele será enviado para nossa API e exibido abaixo.</p>
+                
+                <form id="post-form">
+                    <div class="form-group">
+                        <label for="post-title">
+                            <i class="fas fa-heading"></i> Título do Post
+                        </label>
+                        <input 
+                            type="text" 
+                            id="post-title" 
+                            placeholder="Digite um título interessante..."
+                            required
+                            maxlength="100"
+                            aria-label="Campo para título do post"
+                        >
+                        <div class="char-counter" id="title-counter">0/100</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="post-content">
+                            <i class="fas fa-align-left"></i> Conteúdo
+                        </label>
+                        <textarea 
+                            id="post-content" 
+                            placeholder="Compartilhe seus pensamentos, ideias ou notícias..."
+                            rows="6"
+                            required
+                            maxlength="500"
+                            aria-label="Campo para conteúdo do post"
+                        ></textarea>
+                        <div class="char-counter" id="content-counter">0/500</div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submit-btn" class="btn-submit" aria-label="Publicar post">
+                            <i class="fas fa-paper-plane"></i> Publicar Post
+                        </button>
+                        <button type="button" id="clear-btn" class="btn-clear" aria-label="Limpar formulário">
+                            <i class="fas fa-broom"></i> Limpar
+                        </button>
+                    </div>
+                    
+                    <div class="form-info">
+                        <i class="fas fa-info-circle"></i> Seu post será enviado para: <code>https://jsonplaceholder.typicode.com/posts</code>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Seção de Visualização/Resultado -->
+            <section class="post-result">
+                <h2><i class="fas fa-eye"></i> Post Publicado</h2>
+                <p class="section-description">Aqui será exibido o post que você criou, após o envio para a API.</p>
+                
+                <div class="result-container">
+                    <div class="result-placeholder" id="placeholder">
+                        <i class="fas fa-newspaper"></i>
+                        <h3>Nenhum post criado ainda</h3>
+                        <p>Seu post aparecerá aqui após ser publicado</p>
+                    </div>
+                    
+                    <article class="post-display" id="post-display" style="display: none;">
+                        <div class="post-header">
+                            <div class="post-meta">
+                                <div class="user-info">
+                                    <div class="user-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="user-details">
+                                        <h3 id="renderizador-titulo">Título do Post</h3>
+                                        <div class="post-time">
+                                            <i class="far fa-clock"></i>
+                                            <span id="post-time">Agora mesmo</span>
+                                            <span class="post-id">ID: <span id="post-id">-</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="post-status" id="post-status">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Publicado com sucesso!</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="post-body">
+                            <p id="renderizador-conteudo">Conteúdo do post...</p>
+                        </div>
+                        
+                        <div class="post-footer">
+                            <div class="post-actions">
+                                <button class="action-btn like-btn" aria-label="Curtir post">
+                                    <i class="far fa-thumbs-up"></i> Curtir
+                                </button>
+                                <button class="action-btn comment-btn" aria-label="Comentar">
+                                    <i class="far fa-comment"></i> Comentar
+                                </button>
+                                <button class="action-btn share-btn" aria-label="Compartilhar">
+                                    <i class="fas fa-share"></i> Compartilhar
+                                </button>
+                            </div>
+                            <div class="api-response">
+                                <h4><i class="fas fa-code"></i> Resposta da API:</h4>
+                                <pre id="api-response">Aguardando dados...</pre>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                
+                <div class="loading-spinner" id="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Enviando post para a API...</p>
+                </div>
+            </section>
+
+            <!-- Informações da API -->
+            <section class="api-info">
+                <h2><i class="fas fa-database"></i> Sobre a API</h2>
+                <div class="info-cards">
+                    <div class="info-card">
+                        <i class="fas fa-globe"></i>
+                        <h3>API Externa</h3>
+                        <p>Utilizamos a API JSONPlaceholder para simular o envio de posts em um ambiente real.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-sync-alt"></i>
+                        <h3>Método POST</h3>
+                        <p>Enviamos os dados usando o método HTTP POST, exatamente como em aplicações reais.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Dados Seguros</h3>
+                        <p>Seus dados são enviados de forma segura e não são armazenados permanentemente.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-feather-alt"></i>
+                    <h3>Posting<span>Page</span></h3>
+                    <p>Projeto educativo de consumo de API</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Links Úteis</h4>
+                    <a href="https://jsonplaceholder.typicode.com/" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-external-link-alt"></i> JSONPlaceholder API
+                    </a>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-external-link-alt"></i> Documentação Fetch API
+                    </a>
+                </div>
+                <div class="footer-tech">
+                    <h4>Tecnologias</h4>
+                    <div class="tech-tags">
+                        <span class="tech-tag">HTML5</span>
+                        <span class="tech-tag">CSS3</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">Fetch API</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Posting Page - Desenvolvido para fins educacionais</p>
+                <p class="github-link">
+                    <i class="fab fa-github"></i>
+                    Repositório: <a href="https://github.com/seu-usuario/posting--page" target="_blank" rel="noopener noreferrer">posting--page</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>
